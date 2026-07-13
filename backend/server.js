@@ -1,3 +1,4 @@
+require('dotenv').config();
 var express = require("express");
 var app = express();
 const bcrypt = require('bcrypt');
@@ -6,8 +7,15 @@ var cors = require('cors');
 var multer = require('multer'),
   bodyParser = require('body-parser'),
   path = require('path');
-var mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost/productDB");
+  var mongoose = require("mongoose");
+
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+.then(() => console.log("MongoDB connected"))
+.catch((err) => console.log(err));
+
 var fs = require('fs');
 var product = require("./model/product.js");
 var user = require("./model/user.js");
@@ -47,7 +55,7 @@ app.use("/", (req, res, next) => {
       next();
     } else {
       /* decode jwt token if authorized*/
-      jwt.verify(req.headers.token, 'shhhhh11111', function (err, decoded) {
+      jwt.verify(req.headers.token, process.env.JWT_SECRET, function (err, decoded) {
         if (decoded && decoded.user) {
           req.user = decoded;
           next();
@@ -164,7 +172,7 @@ app.post("/register", (req, res) => {
 });
 
 function checkUserAndGenerateToken(data, req, res) {
-  jwt.sign({ user: data.username, id: data._id }, 'shhhhh11111', { expiresIn: '1d' }, (err, token) => {
+  jwt.sign({ user: data.username, id: data._id }, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
     if (err) {
       res.status(400).json({
         status: false,
@@ -183,9 +191,19 @@ function checkUserAndGenerateToken(data, req, res) {
 /* Api to add Product */
 app.post("/add-product", upload.any(), (req, res) => {
   try {
-    if (req.files && req.body && req.body.name && req.body.desc && req.body.price &&
-      req.body.discount) {
+    console.log("BODY:", req.body);
+    console.log("FILES:", req.files);
+    console.log("USER:", req.user);
 
+    if (
+      req.files &&
+      req.files.length > 0 &&
+      req.body &&
+      req.body.name &&
+      req.body.desc &&
+      req.body.price &&
+      req.body.discount
+    ) {
       let new_product = new product();
       new_product.name = req.body.name;
       new_product.desc = req.body.desc;
@@ -193,10 +211,12 @@ app.post("/add-product", upload.any(), (req, res) => {
       new_product.image = req.files[0].filename;
       new_product.discount = req.body.discount;
       new_product.user_id = req.user.id;
+
       new_product.save((err, data) => {
         if (err) {
+          console.log("SAVE ERROR:", err);
           res.status(400).json({
-            errorMessage: err,
+            errorMessage: err.message || err,
             status: false
           });
         } else {
@@ -208,14 +228,19 @@ app.post("/add-product", upload.any(), (req, res) => {
       });
 
     } else {
+      console.log("Validation failed");
+      console.log("req.body =", req.body);
+      console.log("req.files =", req.files);
+
       res.status(400).json({
         errorMessage: 'Add proper parameter first!',
         status: false
       });
     }
   } catch (e) {
+    console.log("ADD PRODUCT ERROR:", e);
     res.status(400).json({
-      errorMessage: 'Something went wrong!',
+      errorMessage: e.message || 'Something went wrong!',
       status: false
     });
   }
@@ -367,6 +392,8 @@ app.get("/get-product", (req, res) => {
 
 });
 
-app.listen(2000, () => {
-  console.log("Server is Runing On port 2000");
+const PORT = process.env.PORT || 2000;
+
+app.listen(PORT, () => {
+  console.log(`Server is Running On port ${PORT}`);
 });

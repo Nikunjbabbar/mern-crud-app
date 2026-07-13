@@ -30,11 +30,19 @@ class Register extends React.Component {
       // this.props.history.push('/');
       this.props.navigate("/");
     }).catch((err) => {
-      swal({
-        text: err.response.data.errorMessage,
-        icon: "error",
-        type: "error"
-      });
+      if (err.response && err.response.data && err.response.data.errorMessage) {
+        swal({
+          text: err.response.data.errorMessage,
+          icon: "error",
+          type: "error"
+        });
+      } else {
+        swal({
+          text: 'Unable to reach the server. Make sure the backend is running on port 2000.',
+          icon: "error",
+          type: "error"
+        });
+      }
     });
   }
 

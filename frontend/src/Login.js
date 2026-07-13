@@ -4,6 +4,7 @@ import { Button, TextField, Link } from "@material-ui/core";
 import { withRouter } from "./utils";
 const axios = require("axios");
 const bcrypt = require("bcryptjs");
+const API = process.env.REACT_APP_API_URL;
 var salt = bcrypt.genSaltSync(10);
 
 class Login extends React.Component {
@@ -20,7 +21,7 @@ class Login extends React.Component {
   login = () => {
     const pwd = bcrypt.hashSync(this.state.password, salt);
 
-    axios.post('http://https://mern-crud-app-neuv.onrender.com/login', {
+    axios.post(`${API}/login`, {
       username: this.state.username,
       password: pwd,
     }).then((res) => {

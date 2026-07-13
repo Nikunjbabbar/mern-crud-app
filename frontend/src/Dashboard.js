@@ -18,6 +18,7 @@ import { Pagination } from '@material-ui/lab';
 import swal from 'sweetalert';
 import { withRouter } from './utils';
 const axios = require('axios');
+const API = process.env.REACT_APP_API_URL;
 
 class Dashboard extends Component {
   constructor() {
@@ -60,8 +61,7 @@ class Dashboard extends Component {
       data = `${data}&search=${this.state.search}`;
     }
 
-    axios
-      .get(`http://https://mern-crud-app-neuv.onrender.com/get-product${data}`, {
+    axios.get(`${API}/get-product${data}`, {
         headers: {
           token: this.state.token
         }
@@ -89,7 +89,7 @@ class Dashboard extends Component {
   deleteProduct = (id) => {
     axios
       .post(
-        'http://https://mern-crud-app-neuv.onrender.com/delete-product',
+  `${API}/delete-product`,
         { id: id },
         {
           headers: {
@@ -161,7 +161,7 @@ class Dashboard extends Component {
     formData.append('price', this.state.price);
 
     axios
-      .post('http://https://mern-crud-app-neuv.onrender.com/add-product', formData, {
+      .post(`${API}/add-product`, formData, {
         headers: {
           token: this.state.token
         }
@@ -211,7 +211,7 @@ class Dashboard extends Component {
     formData.append('price', this.state.price);
 
     axios
-      .post('http://https://mern-crud-app-neuv.onrender.com/update-product', formData, {
+      .post(`${API}/update-product`, formData, {
         headers: {
           token: this.state.token
         }
@@ -538,11 +538,11 @@ class Dashboard extends Component {
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">
                     <img
-                      src={`http://https://mern-crud-app-neuv.onrender.com/${row.image}`}
-                      alt={row.name}
-                      width="70"
-                      height="70"
-                    />
+  src={`${API}/${row.image}`}
+  alt={row.name}
+  width="70"
+  height="70"
+/>
                   </TableCell>
                   <TableCell align="center">{row.desc}</TableCell>
                   <TableCell align="center">{row.price}</TableCell>

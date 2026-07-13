@@ -3,6 +3,7 @@ import swal from "sweetalert";
 import { Button, TextField, Link } from "@material-ui/core";
 import { withRouter } from "./utils";
 const axios = require("axios");
+const API = process.env.REACT_APP_API_URL;
 
 class Register extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class Register extends React.Component {
 
   register = () => {
 
-    axios.post('http://https://mern-crud-app-neuv.onrender.com/register', {
+    axios.post(`${API}/login`, {
       username: this.state.username,
       password: this.state.password,
     }).then((res) => {

@@ -61,7 +61,7 @@ class Dashboard extends Component {
     }
 
     axios
-      .get(`http://localhost:2000/get-product${data}`, {
+      .get(`http://https://mern-crud-app-neuv.onrender.com/get-product${data}`, {
         headers: {
           token: this.state.token
         }
@@ -89,7 +89,7 @@ class Dashboard extends Component {
   deleteProduct = (id) => {
     axios
       .post(
-        'http://localhost:2000/delete-product',
+        'http://https://mern-crud-app-neuv.onrender.com/delete-product',
         { id: id },
         {
           headers: {
@@ -161,7 +161,7 @@ class Dashboard extends Component {
     formData.append('price', this.state.price);
 
     axios
-      .post('http://localhost:2000/add-product', formData, {
+      .post('http://https://mern-crud-app-neuv.onrender.com/add-product', formData, {
         headers: {
           token: this.state.token
         }
@@ -211,7 +211,7 @@ class Dashboard extends Component {
     formData.append('price', this.state.price);
 
     axios
-      .post('http://localhost:2000/update-product', formData, {
+      .post('http://https://mern-crud-app-neuv.onrender.com/update-product', formData, {
         headers: {
           token: this.state.token
         }
@@ -538,7 +538,7 @@ class Dashboard extends Component {
                   <TableCell align="center">{row.name}</TableCell>
                   <TableCell align="center">
                     <img
-                      src={`http://localhost:2000/${row.image}`}
+                      src={`http://https://mern-crud-app-neuv.onrender.com/${row.image}`}
                       alt={row.name}
                       width="70"
                       height="70"

@@ -19,7 +19,7 @@ class Register extends React.Component {
 
   register = () => {
 
-    axios.post(`${API}/login`, {
+    axios.post(`${API}/register`, {
       username: this.state.username,
       password: this.state.password,
     }).then((res) => {
